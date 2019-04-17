@@ -27,9 +27,53 @@ public class Server extends UnicastRemoteObject implements IVirusWars {
                 tmp.ShowClientMessage("Game is started");
                 tmp.Display(field);
             }
+            while (true)
+            {
+                PutVirus(clients.get(0).WaitForTurn(),0);
+                clients.get(0).Display(field);
+                clients.get(1).Display(field);
+                if(IsGameFinished())
+                {
+                    break;
+                }
+                PutVirus(clients.get(1).WaitForTurn(),1);
+                if(IsGameFinished())
+                {
+                    break;
+                }
+                clients.get(0).Display(field);
+                clients.get(1).Display(field);
+            }
         }catch (RemoteException ex)
         {
             ex.printStackTrace();
+        }
+    }
+    private static  boolean IsGameFinished()
+    {
+        return  false;
+    }
+    private  static  void PutVirus(int[][] turn,int player)
+    {
+        char c;
+        switch (player)
+        {
+            case 0:
+                c = 'X';
+                break;
+            case 1:
+                c = 'O';
+                break;
+                default:
+                    c = 'N';
+                    break;
+        }
+        if(turn != null)
+        {
+            for(int i = 0; i < 3; i++)
+            {
+                field[turn[i][0]][turn[i][1]] = c;
+            }
         }
     }
     private  int players = 0;
@@ -60,16 +104,10 @@ public class Server extends UnicastRemoteObject implements IVirusWars {
             client.ShowClientMessage("Connected player " +  client.GetClientNum());
             clients.add(client);
             System.out.println("Player " + players + " connected");
-            StartGame();
-            /*if(players  ==  2)
+            if(players  ==  2)
             {
                 StartGame();
-                for (int i = 0; i < clients.size(); i++) {
-                    IVirusWars tmp = clients.get(i);
-                    tmp.ShowClientMessage("Game is started");
-                    tmp.Display(field);
-                }
-            }*/
+            }
             return;
         }
         client.ShowClientMessage("No place for new players");
@@ -106,5 +144,9 @@ public class Server extends UnicastRemoteObject implements IVirusWars {
             }
             System.out.println();
         }
+    }
+    @Override public int[][] WaitForTurn()
+    {
+        return null;
     }
 }

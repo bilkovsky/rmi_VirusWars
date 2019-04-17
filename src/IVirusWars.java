@@ -7,5 +7,5 @@ public interface IVirusWars extends Remote {
     void SetClientNum(int num) throws RemoteException;
     int GetClientNum() throws RemoteException;
     void Display(char[][] table) throws RemoteException;
-    //boolean PutVirus(Sting place,int playerNum);
+    int[][] WaitForTurn() throws  RemoteException;
 }
