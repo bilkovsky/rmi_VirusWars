@@ -58,7 +58,7 @@ public class Server extends UnicastRemoteObject implements IVirusWars {
         if(turn != null) {
 
             switch (player) {
-                case 0:
+                case 1:
                     for (int i = 0; i < 3; i++) {
                         if (field[turn[i][0]][turn[i][1]] == 152) {
                             field[turn[i][0]][turn[i][1]] = 'X';
@@ -68,7 +68,7 @@ public class Server extends UnicastRemoteObject implements IVirusWars {
                         }
                     }
                     break;
-                case 1:
+                case 2:
                     for (int i = 0; i < 3; i++) {
                         if (field[turn[i][0]][turn[i][1]] == 152) {
                             field[turn[i][0]][turn[i][1]] = 'O';

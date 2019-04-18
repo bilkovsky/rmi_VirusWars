@@ -116,6 +116,7 @@ public class Client extends UnicastRemoteObject implements IVirusWars, Serializa
     }
     private  boolean IsValid(int i,int j)
     {
+        System.out.println("i = " + i + " j = " + j);
         if(playerNum == 1 && i == 0 && j == 0 && field[0][0] == 152)
         {
             return true;
@@ -136,12 +137,13 @@ public class Client extends UnicastRemoteObject implements IVirusWars, Serializa
     }
     private boolean CheckNeigh(int i,int j)
     {
+       // System.out.println("i = " + i + " j = " + j);
         if(playerNum == 1)
         {
             int left = j - 1;
             int right = j + 1;
-            int bot = i - 1;
-            int top = i +1;
+            int top = i - 1;
+            int bot = i +1;
             if(left == -1)
             {
                 left++;
@@ -158,13 +160,16 @@ public class Client extends UnicastRemoteObject implements IVirusWars, Serializa
             {
                 bot--;
             }
-            for(;left <= right; left++)
+            System.out.println(left + " " + right + " " + bot + " " + top);
+            for(int indI = left ;indI <= right; indI++)
             {
-                for(;top <= bot ; top++)
+                for(int indJ = top;indJ <= bot ; indJ++)
                 {
-                    if(left != i && top != j)
+                    System.out.println(indI + " " + indJ);
+                    if(indI != i || indJ != j)
                     {
-                        if (field[left][top] == 'X' || field[left][top] == '+')
+                       // System.out.println(field[indI][indJ] + " " + indI + " " + indJ);
+                        if (field[indI][indJ] == 'X' || field[indI][indJ] == '+')
                         {
                             return true;
                         }
@@ -215,7 +220,7 @@ public class Client extends UnicastRemoteObject implements IVirusWars, Serializa
     }
     private  void PutVirus(int[] turn,int player) {
         switch (player) {
-            case 0:
+            case 1:
                 if (field[turn[0]][turn[1]] == 152)
                 {
                     field[turn[0]][turn[1]] = 'X';
@@ -225,7 +230,7 @@ public class Client extends UnicastRemoteObject implements IVirusWars, Serializa
                     field[turn[0]][turn[1]] = '+';
                 }
                 break;
-            case 1:
+            case 2:
                 if (field[turn[0]][turn[1]] == 152)
                 {
                     field[turn[0]][turn[1]] = 'O';
