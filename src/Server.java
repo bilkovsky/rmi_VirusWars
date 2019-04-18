@@ -12,6 +12,8 @@ public class Server extends UnicastRemoteObject implements IVirusWars {
     }
     static Vector<IVirusWars>  clients = new Vector<>();
     private static char field[][];
+    private static int missCounter = 0;
+    private  int players = 0;
     private static void StartGame() {
         try {
             String mes = "Game is started";
@@ -27,16 +29,22 @@ public class Server extends UnicastRemoteObject implements IVirusWars {
                 tmp.ShowClientMessage("Game is started");
                 tmp.Display(field);
             }
+            PutVirus(clients.get(0).WaitForTurn(),1);
+            clients.get(0).Display(field);
+            clients.get(1).Display(field);
+            PutVirus(clients.get(1).WaitForTurn(),2);
+            clients.get(0).Display(field);
+            clients.get(1).Display(field);
             while (true)
             {
-                PutVirus(clients.get(0).WaitForTurn(),0);
+                PutVirus(clients.get(0).WaitForTurn(),1);
                 clients.get(0).Display(field);
                 clients.get(1).Display(field);
                 if(IsGameFinished())
                 {
                     break;
                 }
-                PutVirus(clients.get(1).WaitForTurn(),1);
+                PutVirus(clients.get(1).WaitForTurn(),2);
                 if(IsGameFinished())
                 {
                     break;
@@ -51,12 +59,53 @@ public class Server extends UnicastRemoteObject implements IVirusWars {
     }
     private static  boolean IsGameFinished()
     {
-        return  false;
+        if(missCounter == 2)
+        {
+            System.out.println("Game is finished. It is draw");
+            return true;
+        }
+        boolean first = false,second = false;
+        for (int i = 0; i < field.length; i++) {
+            for (int j = 0; j < field[0].length; j++) {
+                if(field[i][j] == 'X')
+                {
+                    first = true;
+                }
+                if(field[i][j] == 'O')
+                {
+                    second = true;
+                }
+            }
+        }
+        if(first && second)
+        {
+            return false;
+        }
+        else
+        {
+            try {
+                if (first) {
+                    System.out.println("Game is finished. Player 1 has won");
+                    clients.get(0).ShowClientMessage("Game is finished. Player 1 has won");
+                    clients.get(1).ShowClientMessage("Game is finished. Player 1 has won");
+                    return true;
+                } else {
+                    System.out.println("Game is finished. Player 2 has won");
+                    clients.get(0).ShowClientMessage("Game is finished. Player 2 has won");
+                    clients.get(1).ShowClientMessage("Game is finished. Player 2 has won");
+                    return true;
+                }
+            }catch (RemoteException ex)
+            {
+                ex.printStackTrace();
+                return false;
+            }
+        }
     }
     private  static  void PutVirus(int[][] turn,int player)
     {
         if(turn != null) {
-
+            missCounter = 0;
             switch (player) {
                 case 1:
                     for (int i = 0; i < 3; i++) {
@@ -74,7 +123,7 @@ public class Server extends UnicastRemoteObject implements IVirusWars {
                             field[turn[i][0]][turn[i][1]] = 'O';
                         }
                         else {
-                            field[turn[i][0]][turn[i][1]] = 92;
+                            field[turn[i][0]][turn[i][1]] = '•';
                         }
                     }
                     break;
@@ -82,9 +131,13 @@ public class Server extends UnicastRemoteObject implements IVirusWars {
                     break;
             }
         }
+        else
+        {
+            missCounter++;
+        }
 
     }
-    private  int players = 0;
+
     public  static  void main(String[] args) throws Exception
     {
         try {

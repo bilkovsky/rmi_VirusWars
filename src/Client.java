@@ -99,7 +99,7 @@ public class Client extends UnicastRemoteObject implements IVirusWars, Serializa
             }
             else
             {
-                System.out.println("Input your turn like a8,J3,f10 etc or \"miss\" to miss the turn \n Remember first positions is a1 and c`0");
+                System.out.println("Input your turn like a8,J3,f10 etc or \"miss\" to miss the turn \n Remember first positions is a1 and i10");
             }
         }
         return result;
@@ -116,7 +116,7 @@ public class Client extends UnicastRemoteObject implements IVirusWars, Serializa
     }
     private  boolean IsValid(int i,int j)
     {
-        System.out.println("i = " + i + " j = " + j);
+       // System.out.println(i + " " + j);
         if(playerNum == 1 && i == 0 && j == 0 && field[0][0] == 152)
         {
             return true;
@@ -125,11 +125,11 @@ public class Client extends UnicastRemoteObject implements IVirusWars, Serializa
         {
             return true;
         }
-        if(playerNum == 1 && field[i][j] == 'X' && field[i][j] == '+')
+        if(playerNum == 1 && (field[i][j] == 'X' || field[i][j] == '•'))
         {
             return false;
         }
-        if(playerNum == 2 && field[i][j] == 'O' && field[i][j] == 92)
+        if(playerNum == 2 && (field[i][j] == 'O' || field[i][j] == '+'))
         {
             return false;
         }
@@ -137,7 +137,6 @@ public class Client extends UnicastRemoteObject implements IVirusWars, Serializa
     }
     private boolean CheckNeigh(int i,int j)
     {
-       // System.out.println("i = " + i + " j = " + j);
         if(playerNum == 1)
         {
             int left = j - 1;
@@ -160,15 +159,12 @@ public class Client extends UnicastRemoteObject implements IVirusWars, Serializa
             {
                 bot--;
             }
-            System.out.println(left + " " + right + " " + bot + " " + top);
-            for(int indI = left ;indI <= right; indI++)
+            for(int indJ = left ;indJ <= right; indJ++)
             {
-                for(int indJ = top;indJ <= bot ; indJ++)
+                for(int indI = top;indI <= bot ; indI++)
                 {
-                    System.out.println(indI + " " + indJ);
                     if(indI != i || indJ != j)
                     {
-                       // System.out.println(field[indI][indJ] + " " + indI + " " + indJ);
                         if (field[indI][indJ] == 'X' || field[indI][indJ] == '+')
                         {
                             return true;
@@ -182,8 +178,8 @@ public class Client extends UnicastRemoteObject implements IVirusWars, Serializa
         else {
             int left = j - 1;
             int right = j + 1;
-            int bot = i - 1;
-            int top = i +1;
+            int top = i - 1;
+            int bot = i +1;
             if(left == -1)
             {
                 left++;
@@ -200,13 +196,13 @@ public class Client extends UnicastRemoteObject implements IVirusWars, Serializa
             {
                 bot--;
             }
-            for(;left <= right; left++)
+            for(int indJ = left ;indJ <= right; indJ++)
             {
-                for(;top <= bot ; top++)
+                for(int indI = top;indI <= bot ; indI++)
                 {
-                    if(left != i && top != j)
+                    if(indI != i || indJ != j)
                     {
-                        if (field[left][top] == 'O' || field[left][top] == 92)
+                        if (field[indI][indJ] == 'O' || field[indI][indJ] == '•')
                         {
                             return true;
                         }
