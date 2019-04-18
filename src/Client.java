@@ -87,8 +87,9 @@ public class Client extends UnicastRemoteObject implements IVirusWars, Serializa
             {
                 result[turnCounter][0] = turn.toUpperCase().charAt(0) - 'A';
                 result[turnCounter][1] = Integer.parseInt(turn.substring(1)) - 1;
-                if(Is(result[turnCounter][0],result[turnCounter][1]))
+                if(IsValid(result[turnCounter][0],result[turnCounter][1]))
                 {
+                    PutVirus(result[turnCounter],playerNum);
                     turnCounter++;
                 }
                 else
@@ -115,25 +116,127 @@ public class Client extends UnicastRemoteObject implements IVirusWars, Serializa
     }
     private  boolean IsValid(int i,int j)
     {
-        if(playerNum == 1 && i == 0 && j = 0 && field[0][0] = 152)
+        if(playerNum == 1 && i == 0 && j == 0 && field[0][0] == 152)
         {
             return true;
         }
-        return  true;
+        if(playerNum == 2 && i == 9 && j == 9 && field[9][9] == 152)
+        {
+            return true;
+        }
+        if(playerNum == 1 && field[i][j] == 'X' && field[i][j] == '+')
+        {
+            return false;
+        }
+        if(playerNum == 2 && field[i][j] == 'O' && field[i][j] == 92)
+        {
+            return false;
+        }
+        return  CheckNeigh(i,j);
+    }
+    private boolean CheckNeigh(int i,int j)
+    {
+        if(playerNum == 1)
+        {
+            int left = j - 1;
+            int right = j + 1;
+            int bot = i - 1;
+            int top = i +1;
+            if(left == -1)
+            {
+                left++;
+            }
+            if(right == 10)
+            {
+                right--;
+            }
+            if(top == -1)
+            {
+                top++;
+            }
+            if(bot == 10)
+            {
+                bot--;
+            }
+            for(;left <= right; left++)
+            {
+                for(;top <= bot ; top++)
+                {
+                    if(left != i && top != j)
+                    {
+                        if (field[left][top] == 'X' || field[left][top] == '+')
+                        {
+                            return true;
+                        }
+                    }
+
+                }
+            }
+            return  false;
+        }
+        else {
+            int left = j - 1;
+            int right = j + 1;
+            int bot = i - 1;
+            int top = i +1;
+            if(left == -1)
+            {
+                left++;
+            }
+            if(right == 10)
+            {
+                right--;
+            }
+            if(top == -1)
+            {
+                top++;
+            }
+            if(bot == 10)
+            {
+                bot--;
+            }
+            for(;left <= right; left++)
+            {
+                for(;top <= bot ; top++)
+                {
+                    if(left != i && top != j)
+                    {
+                        if (field[left][top] == 'O' || field[left][top] == 92)
+                        {
+                            return true;
+                        }
+                    }
+
+                }
+            }
+            return  false;
+        }
+
     }
     private  void PutVirus(int[] turn,int player) {
-        char c;
         switch (player) {
             case 0:
-                c = 'X';
+                if (field[turn[0]][turn[1]] == 152)
+                {
+                    field[turn[0]][turn[1]] = 'X';
+                }
+                else
+                {
+                    field[turn[0]][turn[1]] = '+';
+                }
                 break;
             case 1:
-                c = 'O';
+                if (field[turn[0]][turn[1]] == 152)
+                {
+                    field[turn[0]][turn[1]] = 'O';
+                }
+                else
+                {
+                    field[turn[0]][turn[1]] = 92;
+                }
                 break;
-            default:
-                c = 'N';
-                break;
+                default:
+                    break;
         }
-        field[turn[0]][turn[1]] = c;
     }
 }

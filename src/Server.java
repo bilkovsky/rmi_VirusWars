@@ -55,26 +55,34 @@ public class Server extends UnicastRemoteObject implements IVirusWars {
     }
     private  static  void PutVirus(int[][] turn,int player)
     {
-        char c;
-        switch (player)
-        {
-            case 0:
-                c = 'X';
-                break;
-            case 1:
-                c = 'O';
-                break;
-                default:
-                    c = 'N';
+        if(turn != null) {
+
+            switch (player) {
+                case 0:
+                    for (int i = 0; i < 3; i++) {
+                        if (field[turn[i][0]][turn[i][1]] == 152) {
+                            field[turn[i][0]][turn[i][1]] = 'X';
+                        }
+                        else {
+                            field[turn[i][0]][turn[i][1]] = '+';
+                        }
+                    }
                     break;
-        }
-        if(turn != null)
-        {
-            for(int i = 0; i < 3; i++)
-            {
-                field[turn[i][0]][turn[i][1]] = c;
+                case 1:
+                    for (int i = 0; i < 3; i++) {
+                        if (field[turn[i][0]][turn[i][1]] == 152) {
+                            field[turn[i][0]][turn[i][1]] = 'O';
+                        }
+                        else {
+                            field[turn[i][0]][turn[i][1]] = 92;
+                        }
+                    }
+                    break;
+                default:
+                    break;
             }
         }
+
     }
     private  int players = 0;
     public  static  void main(String[] args) throws Exception
